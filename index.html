@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 3rem;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        #form {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 0.25rem;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            height: 3rem;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+        }
+
+        #input {
+            border: none;
+            padding: 0 1rem;
+            flex-grow: 1;
+            border-radius: 2rem;
+            margin: 0.25rem;
+        }
+
+        #input:focus {
+            outline: none;
+        }
+
+        #form>button {
+            background: #333;
+            border: none;
+            padding: 0 1rem;
+            margin: 0.25rem;
+            border-radius: 3px;
+            outline: none;
+            color: #fff;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages>li {
+            padding: 0.5rem 1rem;
+        }
+
+        #messages>li:nth-child(odd) {
+            background: #efefef;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+        <input id="socketID" placeholder="SOCKETID" autocomplete="off" />
+
+        <input id="input" autocomplete="off" /><button>Send</button>
+
+    </form>
+    <!-- <button onclick="login()">Login </button>
+    <button onclick="login1()">Login 1</button>
+    <button onclick="login2()">Login 2 </button>
+    <button id="sendButton1">send 1 </button>
+    <button id="sendButton2">send 2 </button> -->
+    <button id="joinRoom1">joinRoom1 </button>
+    <button id="joinRoom2">joinRoom2 </button>
+
+    <button id="sendMessageToRoom">sendMessageToRoom </button>
+    <button id="sendMessageToRoom2">sendMessageToRoom2 </button>
+
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // const login = () => {
+
+        //     const url = 'http://localhost:8080/api/auth/login';
+        //     const data = JSON.stringify({
+        //         username: 'Tanmay',
+        //         number: '+917891393460'
+        //     });
+
+        //     const xhr = new XMLHttpRequest();
+        //     xhr.open('POST', url, true);
+        //     xhr.setRequestHeader('Content-Type', 'application/json');
+
+        //     xhr.onreadystatechange = function () {
+        //         if (xhr.readyState === XMLHttpRequest.DONE) {
+        //             if (xhr.status === 200) {
+        //                 var response = JSON.parse(xhr.responseText);
+        //                 console.log('Response:', response.userID);
+        //                 var userId= response.userID;
+        //                 console.log("USERID", userID)
+        //                 socket.emit("pairUserSocket", userID);
+
+        //             } else {
+        //                 console.error('Error:', xhr.status);
+        //             }
+        //         }
+        //     };
+
+        //     xhr.send(data);
+
+        // }
+
+        // const login1 = () => {
+
+        //     const url = 'http://localhost:8080/api/auth/login';
+        //     const data = JSON.stringify({
+        //         username: 'Tanmay2',
+        //         number: '+917891393461'
+        //     });
+
+        //     const xhr = new XMLHttpRequest();
+        //     xhr.open('POST', url, true);
+        //     xhr.setRequestHeader('Content-Type', 'application/json');
+
+        //     xhr.onreadystatechange = function () {
+        //         if (xhr.readyState === XMLHttpRequest.DONE) {
+        //             if (xhr.status === 200) {
+        //                 var response = JSON.parse(xhr.responseText);
+        //                 console.log('Response:', response.userID);
+        //                 var userId= response.userID;
+        //                 console.log("USERID", userID)
+        //                 socket.emit("pairUserSocket", userID);
+
+        //             } else {
+        //                 console.error('Error:', xhr.status);
+        //             }
+        //         }
+        //     };
+
+        //     xhr.send(data);
+
+        // }
+        // const login2 = () => {
+
+        //     const url = 'http://localhost:8080/api/auth/login';
+        //     const data = JSON.stringify({
+        //         username: 'Tanmay3',
+        //         number: '+917891393462'
+        //     });
+
+        //     const xhr = new XMLHttpRequest();
+        //     xhr.open('POST', url, true);
+        //     xhr.setRequestHeader('Content-Type', 'application/json');
+
+        //     xhr.onreadystatechange = function () {
+        //         if (xhr.readyState === XMLHttpRequest.DONE) {
+        //             if (xhr.status === 200) {
+        //                 var response = JSON.parse(xhr.responseText);
+        //                 console.log('Response:', response.userID);
+        //                 var userId= response.userID;
+        //                 console.log("USERID", userID)
+        //                 socket.emit("pairUserSocket", userID);
+
+        //             } else {
+        //                 console.error('Error:', xhr.status);
+        //             }
+        //         }
+        //     };
+
+        //     xhr.send(data);
+
+        // }
+
+        var socket = io();
+
+        socket.on("connect", () => {
+
+            socketId= socket.id; // Assign socket Idto the variable
+            console.log("creating room")
+            // emitting a roome with userID
+
+            socket.emit("setup", "65b95cf4e2180d88640c89df");
+            socket.on('connection')
+
+            // emitting a roome with chatID
+            document.getElementById("joinRoom1").addEventListener("click", () => {
+                socket.emit("join room", "65bf460b0cd913f0360f6061")
+            });
+            document.getElementById("joinRoom2").addEventListener("click", () => {
+                socket.emit("join room", "65bf460b0cd913f0360f6062")
+            });
+
+            document.getElementById("sendMessageToRoom").addEventListener("click", () => {
+                const data = {
+                    chatId: "65bf460b0cd913f0360f6061",
+                    senderId: "65b95cf4e2180d88640c89df",
+                    message: "Hello we are emitting message in the room"
+                }
+
+                socket.emit('message', data);
+            });
+
+            document.getElementById("sendMessageToRoom2").addEventListener("click", () => {
+                const data = {
+                    chatId: "65bf460b0cd913f0360f6062",
+                    senderId: "65b95cf4e2180d88640c89df",
+                    message: "Hello we are emitting message in the room 2"
+                }
+
+                socket.emit('message', data);
+            });
+
+            socket.on("message", (data) => {
+                console.log("data recieved", data)
+            })
+            socket.on("disconnect", () => {
+                console.log("User Disconnected");
+
+            });
+
+
+            // sending message
+
+            // console.log("Connected: ", socketId);
+            // var data1 = {
+            //     message: "hello second user",
+            //     reciever: "zEIB4ntBagXR1me1AAAL",
+            //     sender: socketId,
+            // }
+            // var data2 = {
+            //     message: "hello second user",
+            //     reciever: "0gCpGW3PXFYiyUsjAAAP",
+            //     sender: socketId,
+            // }
+
+            // document.getElementById("sendButton1").addEventListener("click", () => {
+            //     console.log("DATA", data1)
+
+            //     socket.emit('message', data1);
+            // });
+            // document.getElementById("sendButton2").addEventListener("click", () => {
+            //     console.log("DATA", data2)
+
+            //     socket.emit('message', data2);
+            // })
+
+            // socket.on("message", (data) => {
+            //     console.log("data recieved", data)
+            // })
+
+            socket.on("userStatusChanged", (data) => {
+                console.log(`user with userId ${data.userID} is now ${data.status}`)
+            })
+
+
+        });
+
+        function someFunctionUsingSocketId() {
+            // You can safely use socketIdhere
+            console.log("Socket Idoutside function: ", socketId);
+        }
+        console.log("Connected: ", socket.id)
+
+        // var messages = document.getElementById('messages').value;
+        // var form = document.getElementById('form');
+        // var socketId= document.getElementById('socketID');
+        // var input = document.getElementById('input').value;
+
+
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            console.log("DATA", data)
+
+            // if (input.value) {
+            //     socket.emit('chat message', input.value);
+            //     input.value = '';
+            // }
+        });
+
+        socket.on('chat message', ({ sender, message }) => {
+            console.log("chat history called")
+            const chatHistory = document.getElementById('chatHistory');
+            chatHistory.innerHTML += `<li><b>${sender}:</b> ${message}</li>`;
+        });
+
+
+    </script>
+</body>
+
+</html>
