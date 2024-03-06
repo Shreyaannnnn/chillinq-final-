@@ -22,6 +22,25 @@ const authanticateUser = async (req, res) => {
     res.status(201).json({ message: 'User registered successfully' });
 };
 
+// const loginUser = async (req, res) => {
+//     const { username, number } = req.body;
+
+//     const user = await User.findOne({ username });
+//     const userId = user._id.toString();
+
+//     if (user) {
+
+//         const accessToken = jwt.sign({ username: user.username }, 'your-secret-key', { expiresIn: '15m' });
+//         const refreshToken = jwt.sign({ username: user.username }, 'your-refresh-secret-key', { expiresIn: '7d' });
+
+//         res.json({ accessToken, refreshToken, userId });
+//     } else {
+//         res.status(401).json({ message: 'Invalid credentials' });
+//     }
+// };
+
+
+
 const loginUser = async (req, res) => {
     const { username, number } = req.body;
 
@@ -29,9 +48,8 @@ const loginUser = async (req, res) => {
     const userId = user._id.toString();
 
     if (user) {
-
-        const accessToken = jwt.sign({ username: user.username }, 'your-secret-key', { expiresIn: '15m' });
-        const refreshToken = jwt.sign({ username: user.username }, 'your-refresh-secret-key', { expiresIn: '7d' });
+        const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        const refreshToken = jwt.sign({ username: user.username }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
         res.json({ accessToken, refreshToken, userId });
     } else {
@@ -39,19 +57,35 @@ const loginUser = async (req, res) => {
     }
 };
 
+// const refreshToken = (req, res) => {
+//     const { refreshToken } = req.body;
+//     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+//         if (err) {
+//             return res.sendStatus(403);
+//         }
+
+//         // Generate a new access token
+//         const accessToken = jwt.sign({ username: user.username }, 'your-secret-key', { expiresIn: '15m' });
+
+//         res.json({ accessToken });
+//     });
+// };
+
 const refreshToken = (req, res) => {
     const { refreshToken } = req.body;
-    jwt.verify(refreshToken, 'your-refresh-secret-key', (err, user) => {
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) {
             return res.sendStatus(403);
         }
 
-        // Generate a new access token
-        const accessToken = jwt.sign({ username: user.username }, 'your-secret-key', { expiresIn: '15m' });
+        // Generate a new access token using the environment variable for the secret key
+        const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 
         res.json({ accessToken });
     });
 };
+
+
 
 module.exports = {
     authanticateUser,

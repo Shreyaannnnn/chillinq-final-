@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authenticateToken = require('../../middlewares/authanticate');
 const { editUserField } = require('../../controllers/user/editUser')
 const { getUserProfile } = require('../../controllers/user/getUserProfile')
 const { addFriend,acceptFriendRequest } = require('../../controllers/user/addFriend')
@@ -11,7 +12,8 @@ const { getFriendsList } = require("../../controllers/user/getFriendsList")
 
 
 router.route("/editUser").put(editUserField);
-router.route("/getUser").get(getUserProfile);
+// router.route("/getUser").get( getUserProfile);
+router.route("/getUser").get(authenticateToken, getUserProfile);
 router.route("/addFriend").post(addFriend);
 router.route("/acceptFriendRequest").post(acceptFriendRequest);
 router.route("/blockProfile").post(blockProfile);
