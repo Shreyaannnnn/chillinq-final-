@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+require('dotenv').config();
 
 const User = require('../../modules/User/user')
 
@@ -50,7 +51,6 @@ const loginUser = async (req, res) => {
     if (user) {
         const accessToken = jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
         const refreshToken = jwt.sign({ username: user.username }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-
         res.json({ accessToken, refreshToken, userId });
     } else {
         res.status(401).json({ message: 'Invalid credentials' });

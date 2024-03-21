@@ -9,22 +9,20 @@ const { deleteProfile } = require("../../controllers/user/deleteProfile")
 const { onboardUser } = require("../../controllers/user/onboard")
 const { getChatList } = require("../../controllers/user/getChatList") 
 const { getFriendsList } = require("../../controllers/user/getFriendsList")
+const authenticateToken = require('../../middlewares/authanticate');
 
 
-router.route("/editUser").put(editUserField);
+router.route("/editUser").put(authenticateToken, editUserField);
 // router.route("/getUser").get( getUserProfile);
 router.route("/getUser").get(authenticateToken, getUserProfile);
-router.route("/addFriend").post(addFriend);
-router.route("/acceptFriendRequest").post(acceptFriendRequest);
-router.route("/blockProfile").post(blockProfile);
-router.route("/unblockProfile").post(unblockProfile);
-router.route("/deleteProfile").post(deleteProfile);
-router.route("/onboardUser").post(onboardUser);
-router.route("/getChatList").get(getChatList);
-router.route("/getFriendsList").get(getFriendsList);
-
-
-
+router.route("/addFriend").post(authenticateToken, addFriend);
+router.route("/acceptFriendRequest").post(authenticateToken, acceptFriendRequest);
+router.route("/blockProfile").post(authenticateToken, blockProfile);
+router.route("/unblockProfile").post(authenticateToken, unblockProfile);
+router.route("/deleteProfile").post(authenticateToken, deleteProfile);
+router.route("/onboardUser").post(authenticateToken, onboardUser);
+router.route("/getChatList").get(authenticateToken, getChatList);
+router.route("/getFriendsList").get(authenticateToken, getFriendsList);
 
 
 

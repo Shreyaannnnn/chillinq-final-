@@ -24,11 +24,12 @@ function authenticateToken(req, res, next) {
     console.log('Token not provided. Sending 401.');
     return res.sendStatus(401);
   }
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  // console.log(token.split(' ')[1])
+  jwt.verify(token.split(' ')[1], process.env.ACCESS_TOKEN_SECRET, (err, user) => {
   // jwt.verify(token,"your-access-token-secret", (err, user) => {
     if (err) {
-      console.log('Token verification failed. Sending 403.');
+      console.log('Token verification failed. Sending 403.', err);
+      console.log(process.env.ACCESS_TOKEN_SECRET);
       return res.sendStatus(403);
     }
 
